@@ -5,6 +5,7 @@ public class AllSamples {
 	private void run() {
 		new CreateTable().run();
 		new CreateItem().run();
+		new DeleteItem().run();
 		new DeleteTable().run();
 	}
 

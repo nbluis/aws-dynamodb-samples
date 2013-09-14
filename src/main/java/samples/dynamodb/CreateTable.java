@@ -3,11 +3,10 @@ package samples.dynamodb;
 import java.util.ArrayList;
 import java.util.List;
 
-import samples.dynamodb.model.User;
-
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import com.amazonaws.services.dynamodbv2.model.AttributeDefinition;
 import com.amazonaws.services.dynamodbv2.model.CreateTableRequest;
+import com.amazonaws.services.dynamodbv2.model.DescribeTableRequest;
+import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
 import com.amazonaws.services.dynamodbv2.model.KeySchemaElement;
 import com.amazonaws.services.dynamodbv2.model.KeyType;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
@@ -38,26 +37,24 @@ public class CreateTable extends DynamoDBSample {
 		createTableWithRetries(request, 10);
 		System.out.println("Table user created!");
 
-		waitForTableAvailable(User.class, 10);
-
+		waitForTableAvailable("user", 10);
 	}
 
-	private void waitForTableAvailable(Class<?> clazz, int retries) {
-		String tableName = clazz.getAnnotation(DynamoDBTable.class).tableName();
-
+	private void waitForTableAvailable(String tableName, int retries) {
 		System.out.println(String.format("Waiting for table %s to be available!", tableName));
+		DescribeTableRequest request = new DescribeTableRequest();
+		request.setTableName(tableName);
+
 		for (int i = 1; i < retries; i++) {
-			try {
-				mapper.load(User.class, 0L, "range");
-				System.out.println(String.format("Table %s is now available!", tableName));
+			DescribeTableResult result = client.describeTable(request);
+			if ("ACTIVE".equals(result.getTable().getTableStatus()))
 				return;
-			} catch (Exception e) {
-				System.out.println(String.format("Table %s not available yet, try %d of %d!", tableName, i, retries));
-				try {
-					Thread.sleep(10000);
-				} catch (InterruptedException e1) {
-					//ignore
-				}
+
+			System.out.println(String.format("Table %s not available yet, try %d of %d!", tableName, i, retries));
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException e1) {
+				//ignore
 			}
 		}
 	}
