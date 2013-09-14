@@ -1,12 +1,12 @@
 #AWS DynamoDB java samples
 
 ##About
-Just a sample project manipulating AWS DynamoDB using java.
+Just a sample project manipulating [AWS DynamoDB](http://aws.amazon.com/dynamodb/) using java.
 
 ##Getting started
 * Clone then project.
 * Download dependencies described on [ivy.xml](http://ant.apache.org/ivy/).
-* Set up `src/main/resource/aws.properties`. (See the aws.properties.sample)
+* Set up `src/main/resource/aws.properties`. (See the `aws.properties.sample` file)
 * Explore examples.
 
 ## License
