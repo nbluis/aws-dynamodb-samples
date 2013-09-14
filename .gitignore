@@ -1,0 +1,6 @@
+#derived files
+bin
+lib
+
+#credentials
+src/main/resource/aws.properties
