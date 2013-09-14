@@ -21,6 +21,7 @@ Just a sample project manipulating [AWS DynamoDB](http://aws.amazon.com/dynamodb
 https://github.com/aws/aws-dynamodb-session-tomcat
 ](http://www.lightspeedretail.com/cloud/blog/2012/09/aws-dynamodb-for-session-redundancy-and-failover/#close
 https://github.com/aws/aws-dynamodb-session-tomcat)
+* [http://www.youtube.com/watch?v=qIjPm_fKQ0Y](http://www.youtube.com/watch?v=qIjPm_fKQ0Y)
 
 ## License
 The MIT License (MIT)
