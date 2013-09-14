@@ -17,6 +17,7 @@ public abstract class DynamoDBSample {
 			InputStream credentialsFile = this.getClass().getClassLoader().getResourceAsStream("aws.properties");
 			PropertiesCredentials credentials = new PropertiesCredentials(credentialsFile);
 			client = new AmazonDynamoDBAsyncClient(credentials);
+			client.setEndpoint("dynamodb.us-east-1.amazonaws.com");
 			mapper = new DynamoDBMapper(client);
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage(), e);
