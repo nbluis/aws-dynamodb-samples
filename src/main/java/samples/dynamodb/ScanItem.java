@@ -17,8 +17,9 @@ public class ScanItem extends DynamoDBSample {
 		System.out.println("Scanning user Eduardo!");
 
 		DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
-		//scanExpression.addFilterCondition("id", new Condition().withComparisonOperator(EQ).withAttributeValueList(new AttributeValue().withS("1")));
-		scanExpression.addFilterCondition("name", new Condition().withComparisonOperator(EQ).withAttributeValueList(new AttributeValue("Eduardo")));
+		scanExpression.addFilterCondition("name", new Condition().withComparisonOperator(EQ).withAttributeValueList(new AttributeValue().withS("Eduardo")));
+		scanExpression.addFilterCondition("age", new Condition().withComparisonOperator(EQ).withAttributeValueList(new AttributeValue().withN("30")));
+		scanExpression.addFilterCondition("active", new Condition().withComparisonOperator(EQ).withAttributeValueList(new AttributeValue().withN("1")));
 
 		PaginatedScanList<User> list = mapper.scan(User.class, scanExpression);
 

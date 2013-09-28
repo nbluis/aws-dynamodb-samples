@@ -1,9 +1,8 @@
 package samples.dynamodb;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import com.amazonaws.auth.PropertiesCredentials;
+import com.amazonaws.auth.ClasspathPropertiesFileCredentialsProvider;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBAsyncClient;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 
@@ -13,14 +12,9 @@ public abstract class DynamoDBSample {
 	protected DynamoDBMapper mapper;
 
 	public DynamoDBSample() {
-		try {
-			InputStream credentialsFile = this.getClass().getClassLoader().getResourceAsStream("aws.properties");
-			PropertiesCredentials credentials = new PropertiesCredentials(credentialsFile);
-			client = new AmazonDynamoDBAsyncClient(credentials);
-			client.setEndpoint("dynamodb.us-east-1.amazonaws.com");
-			mapper = new DynamoDBMapper(client);
-		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage(), e);
-		}
+		Region region = Region.getRegion(Regions.US_EAST_1);
+		ClasspathPropertiesFileCredentialsProvider credentials = new ClasspathPropertiesFileCredentialsProvider("aws.properties");
+		client = (AmazonDynamoDBAsyncClient) region.createClient(AmazonDynamoDBAsyncClient.class, credentials, null);
+		mapper = new DynamoDBMapper(client);
 	}
 }

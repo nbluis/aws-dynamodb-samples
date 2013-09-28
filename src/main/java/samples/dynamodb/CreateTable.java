@@ -9,6 +9,9 @@ import com.amazonaws.services.dynamodbv2.model.DescribeTableRequest;
 import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
 import com.amazonaws.services.dynamodbv2.model.KeySchemaElement;
 import com.amazonaws.services.dynamodbv2.model.KeyType;
+import com.amazonaws.services.dynamodbv2.model.LocalSecondaryIndex;
+import com.amazonaws.services.dynamodbv2.model.Projection;
+import com.amazonaws.services.dynamodbv2.model.ProjectionType;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
 
@@ -27,12 +30,21 @@ public class CreateTable extends DynamoDBSample {
 		List<AttributeDefinition> attributes = new ArrayList<AttributeDefinition>();
 		attributes.add(new AttributeDefinition("id", ScalarAttributeType.N));
 		attributes.add(new AttributeDefinition("name", ScalarAttributeType.S));
+		attributes.add(new AttributeDefinition("age", ScalarAttributeType.N));
 		request.setAttributeDefinitions(attributes);
 
 		List<KeySchemaElement> keySchema = new ArrayList<KeySchemaElement>();
 		keySchema.add(new KeySchemaElement("id", KeyType.HASH));
 		keySchema.add(new KeySchemaElement("name", KeyType.RANGE));
 		request.setKeySchema(keySchema);
+
+		List<KeySchemaElement> indexKeySchema = new ArrayList<KeySchemaElement>();
+		indexKeySchema.add(new KeySchemaElement("id", KeyType.HASH));
+		indexKeySchema.add(new KeySchemaElement("age", KeyType.RANGE));
+		List<LocalSecondaryIndex> localSecondaryIndexes = new ArrayList<LocalSecondaryIndex>();
+		localSecondaryIndexes.add(new LocalSecondaryIndex().withIndexName("age_index").withKeySchema(indexKeySchema)
+				.withProjection(new Projection().withProjectionType(ProjectionType.ALL)));
+		request.setLocalSecondaryIndexes(localSecondaryIndexes);
 
 		createTableWithRetries(request, 10);
 		System.out.println("Table user created!");
@@ -65,7 +77,7 @@ public class CreateTable extends DynamoDBSample {
 				client.createTable(request);
 				return;
 			} catch (Exception e) {
-				System.out.println(String.format("Failed to create table %s, try %d of %d ", request.getTableName(), i, retries));
+				System.out.println(String.format("Failed to create table %s, try %d of %d : %s", request.getTableName(), i, retries, e.getMessage()));
 				try {
 					Thread.sleep(10000);
 				} catch (InterruptedException e1) {
